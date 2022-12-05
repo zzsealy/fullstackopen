@@ -19,19 +19,22 @@
 //   );
 // }
 
-const Hello = () => {
+const Hello = (props) => {
   return (
     <div>
-      <p>Hello World!</p>
+      <p>Hello {props.name}, your are {props.age} years old!</p>
     </div>
   )
 }
 
 const App = () => {
+  const name = 'Peter'
+  const age = 10
   return (
     <div>
       <h1>Greetings</h1>
-      <Hello />
+      <Hello name='DRQ' age={10 + 15}/>
+      <Hello name='Daisy' age={age} />
     </div>
   )
 }
