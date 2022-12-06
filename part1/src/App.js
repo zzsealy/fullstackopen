@@ -1,42 +1,24 @@
 
-const Content = (props) => {
-  const parts = props.parts
+const Hello = ({name, age}) => {
+  const bornYear = () => new Date().getFullYear() - age  // 函数内定义函数
   return (
     <div>
-    <p>{parts[0].name} {parts[0].exercises}</p>
-    <p>{parts[1].name} {parts[1].exercises}</p>
-    <p>{parts[2].name} {parts[2].exercises}</p>
+      <p>
+        Hello {name}, you are {age} years old.
+      </p>
+      <p>So you were probably born in {bornYear()}</p>
     </div>
   )
-
 }
 
 const App = () => {
-  const course = 'Half Stack application development'
-  const parts = [{
-    name: 'Fundamentals of React',
-    exercises: 10
-  },
-  {
-    name: 'Using props to pass data',
-    exercises: 7
-  },
-  {
-    name: 'State of a component',
-    exercises: 14
-    }]
+  const name = 'drq' 
+  const age = 25
   
-  let count_exercises = 0
-  parts.forEach(part => {
-    count_exercises = count_exercises + part.exercises
-  })
-  
-  return (
+  return(
     <div>
-      <h1>{course}</h1>
-      <Content parts={ parts } />
-      <strong><p>Number of exercises {count_exercises}</p></strong>
-    </div>
+      <Hello name={name} age={age} />
+    </div >
 
   )
 }
