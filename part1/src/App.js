@@ -2,7 +2,7 @@ import {useState} from 'react'
 
 
 const History = (props) => {
-  if (props.clickHistory === 0) {
+  if (props.clickHistory.length === 0) {
     return (
       <h1>你还没点击过左右按钮。</h1>
     )
