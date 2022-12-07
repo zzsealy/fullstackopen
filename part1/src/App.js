@@ -1,25 +1,41 @@
+import {useState} from 'react'
 
-const Hello = ({name, age}) => {
-  const bornYear = () => new Date().getFullYear() - age  // 函数内定义函数
+const Display = (props) => <div>{ props.counter }</div>
+
+
+const Button = (props) => {
   return (
     <div>
-      <p>
-        Hello {name}, you are {age} years old.
-      </p>
-      <p>So you were probably born in {bornYear()}</p>
+      <button onClick={props.onClick}>{props.text}</button>
     </div>
   )
 }
 
 const App = () => {
-  const name = 'drq' 
-  const age = 25
-  
-  return(
-    <div>
-      <Hello name={name} age={age} />
-    </div >
+  // react hooks
+  const [counter, setCounter] = useState(0)
 
+  const increaseByOne = () => {
+    setCounter(counter + 1)
+    console.log('clicked')
+  }
+
+  const decreaseByOne = () => {
+    setCounter(counter - 1)
+  }
+
+  const setZero = () => {
+    setCounter(0)
+  }
+
+
+  return (
+    <div>
+      <Display counter={counter} />
+      <Button onClick={increaseByOne} text="增加" />
+      <Button onClick={decreaseByOne} text="减少" />
+      <Button onClick={setZero} text="置0" />
+    </div>
   )
 }
 
