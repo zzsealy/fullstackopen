@@ -13,22 +13,27 @@ const History = (props) => {
   )
 }
 
+
+const Button = ({ handleClick, text }) => (
+  <button onClick={handleClick}>
+    {text}
+  </button>
+)
+
 const App = () => {
   // react hooks
-  const [clicks, setClicks] = useState({
-    'left': 0,
-    'right': 0
-  })
+  const [left, setLeft] = useState(0)
+  const [right, setRight] = useState(0)
 
   const [clickHistory, setClickHistory] = useState([])
 
   const leftClicks = () => {
-    setClicks({...clicks, left: clicks.left + 1})
+    setLeft(left + 1)
     setClickHistory(clickHistory.concat('L'))
   }
 
   const rightClicks = () => {
-    setClicks({...clicks, right: clicks.right + 1})
+    setRight(right + 1)
     setClickHistory(clickHistory.concat('R'))
   }
 
@@ -36,10 +41,10 @@ const App = () => {
   return (
     <div>
       <History clickHistory={clickHistory} />
-      <p>left click time: {clicks.left}</p>
-      <p>right click time: {clicks.right}</p>
-      <button onClick={leftClicks}>click left</button>
-      <button onClick={rightClicks}>click right</button>
+      <p>left click time: {left}</p>
+      <p>right click time: {right}</p>
+      <Button handleClick={leftClicks} text='click left' />
+      <Button handleClick={rightClicks} text='click right' />
     </div>
   )
 }
