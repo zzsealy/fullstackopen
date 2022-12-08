@@ -1,36 +1,21 @@
-import {useState} from 'react'
+import Note from './components/Note'
 
 
-const Button = (props) => {
-  return (
-    <button onClick={props.handleClick}>{props.text}</button>
-  )
-}
-
-
-const Display = ({ newValue }) => {
-  return (
-    <h1>{newValue}</h1>
-  )
-}
-
-const App = () => {
+const App = (props) => {
   // react hooks
-  const [value, setValue] = useState(0)
-
-  const setToValue = (value) => {
-    return () => {
-      console.log('click!')
-      setValue(value)
-    }
-  }
-
+  const notes = props.notes
+  let contents = []
+  notes.forEach(note => {
+    contents = contents.concat(note.content) 
+  });
 
   return (
     <div>
-      <Display newValue={value} />
-      <Button handleClick={setToValue(value + 1)} text='点击增加value'></Button>
-     </div>
+      <ul>
+        {notes.map(note => <Note key={note.id} note={note} /> 
+        )}
+      </ul>
+    </div>
   )
 }
 
