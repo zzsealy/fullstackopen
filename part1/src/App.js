@@ -12,6 +12,18 @@ const Part = ({ part }) => {
 }
 
 
+const ShowTotalExercises = ({parts}) => {
+  let totalExercises = 0
+
+  parts.forEach(part => {
+    totalExercises = totalExercises + part.exercises 
+  });
+
+  return (
+    <strong>Total of {totalExercises} exercises.</strong>
+  )
+}
+
 const Course = ({course}) => {
   const {name, parts} = course
   return (
@@ -20,9 +32,11 @@ const Course = ({course}) => {
       <ul>
         {parts.map(part => <Part key={part.id} part={part} />)} 
       </ul>
+      <ShowTotalExercises parts={course.parts} />
     </div>
   )
 }
+
 
 const App = () => {
   const course = {
