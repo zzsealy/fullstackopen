@@ -1,95 +1,45 @@
-const Header = (props) => {
-  return (
-    <h1>{props.name}</h1>
-  )
-}
+import { useState } from 'react'
+import Note from './components/Note'
 
 
-const Part = ({ part }) => {
-  return (
-    <li>{part.name} {part.exercises}</li>
-  )
-}
 
 
-const ShowTotalExercises = ({parts}) => {
-  let totalExercisesList = []
+const App = (props) => {
+  const [notes, setNotes] = useState(props.notes)
+  const [newNote, setNewNote] = useState('a new note......')
 
-  parts.forEach(part => {
-    totalExercisesList.push(part.exercises)
-  });
-  
-  const total = totalExercisesList.reduce((s, p) => {
-    console.log('what is happening', s, p)
-    return s + p
-  })
+  const addNote = (event) => {
+    event.preventDefault()
+    console.log('button click :>> ', event.target);
+    const noteObject = {
+      content: newNote,
+      date: new Date().toISOString(),
+      important: Math.random() < 0.5,
+      id: notes.length + 1
+    }
+    setNotes(notes.concat(noteObject))
+    setNewNote('')
+  }
 
-  return (
-    <strong>Total of {total} exercises.</strong>
-  )
-}
+  const handleNoteChange = (event) => {
+    console.log(event.target.value) 
+    setNewNote(event.target.value)  // event.target.value 指的是该元素的输入值
+  }
 
-const Course = ({course}) => {
-  const {name, parts} = course
   return (
     <div>
-      <Header name={name} />
+      <h1>Notes</h1>
       <ul>
-        {parts.map(part => <Part key={part.id} part={part} />)} 
+        {notes.map(note =>
+          <Note key={note.id} note={note} />
+        )}
       </ul>
-      <ShowTotalExercises parts={course.parts} />
+      <form onSubmit={addNote}>
+        <input value={newNote} onChange={handleNoteChange}/>
+        <button type='submit'>save</button>
+      </form>
     </div>
   )
-}
-
-
-const App = () => {
-  const courses = [
-    {
-      name: 'Half Stack application development',
-      id: 1,
-      parts: [
-        {
-          name: 'Fundamentals of React',
-          exercises: 10,
-          id: 1
-        },
-        {
-          name: 'Using props to pass data',
-          exercises: 7,
-          id: 2
-        },
-        {
-          name: 'State of a component',
-          exercises: 14,
-          id: 3
-        },
-        {
-          name: 'Redux',
-          exercises: 11,
-          id: 4
-        }
-      ]
-    },
-    {
-      name: 'Node.js',
-      id: 2,
-      parts: [
-        {
-          name: 'Routing',
-          exercises: 3,
-          id: 1
-        },
-        {
-          name: 'Middlewares',
-          exercises: 7,
-          id: 2
-        }
-      ]
-    }
-  ]
-
-  return courses.map(course => <Course key={course.id} course={course} />) 
 }
 
 export default App
