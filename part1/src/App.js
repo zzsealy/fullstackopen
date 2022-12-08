@@ -13,14 +13,19 @@ const Part = ({ part }) => {
 
 
 const ShowTotalExercises = ({parts}) => {
-  let totalExercises = 0
+  let totalExercisesList = []
 
   parts.forEach(part => {
-    totalExercises = totalExercises + part.exercises 
+    totalExercisesList.push(part.exercises)
   });
+  
+  const total = totalExercisesList.reduce((s, p) => {
+    console.log('what is happening', s, p)
+    return s + p
+  })
 
   return (
-    <strong>Total of {totalExercises} exercises.</strong>
+    <strong>Total of {total} exercises.</strong>
   )
 }
 
