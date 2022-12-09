@@ -19,11 +19,16 @@ const App = () => {
 
   const submitNewName = (event) => {
     event.preventDefault()
-    const newPerson = {
-      name: newName
+    let hasPerson = persons.filter((person) => person.name === newName)
+    if (hasPerson.length === 0) {
+      const newPerson = {
+        name: newName
+      }
+      setPersons(persons.concat(newPerson))
+      setNewName('')
+    } else {
+      alert(`${newName} is already added to phone book`)
     }
-    setPersons(persons.concat(newPerson))
-    setNewName('')
   }
 
   return (
