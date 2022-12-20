@@ -10,6 +10,7 @@ const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', phone: '88998899'}
   ])
+  const [beforeFilterPerson, setBeforeFilterPerson] = useState('')
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
 
@@ -22,6 +23,24 @@ const App = () => {
   }
 
 
+  const handleFilterName = (event) => {
+    debugger;
+    let filterKey = event.target.value
+    let newPersons = []
+    if (filterKey) {
+      beforeFilterPerson.map(person => {
+        let name = person.name
+        if (name.search(filterKey) != -1) {
+          newPersons.push(person)
+        }
+      })
+      setPersons(newPersons)
+    } else {
+      setPersons(beforeFilterPerson)
+    }
+  }
+
+
   const submitNewName = (event) => {
     event.preventDefault()
     let hasPerson = persons.filter((person) => person.name === newName)
@@ -31,6 +50,7 @@ const App = () => {
         phone: newPhone
       }
       setPersons(persons.concat(newPerson))
+      setBeforeFilterPerson(persons.concat(newPerson))
       setNewName('')
       setNewPhone('')
     } else {
@@ -41,6 +61,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <p>Filter the name with:  <input placeholder='input filter name' onChange={handleFilterName}></input> </p>
       <ul>
         {persons.map(person => <Number key={person.name} person={person} />)}
       </ul> 
