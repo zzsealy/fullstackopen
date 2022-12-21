@@ -1,12 +1,30 @@
 import { useState, useEffect} from 'react'
 import axios from 'axios'
 
-const OneNote = ({country}) => {
-  return (
-    <li>
-      <p>{country.name.common}</p>
-    </li>
-  )
+const OneNote = ({ country }) => {
+  const [clickShow, setClickShow] = useState(false)
+
+  const handlerClickShow = () => {
+    setClickShow(!clickShow)
+  }
+
+  if (clickShow) {
+    return (
+      <li>
+        <p>{country.name.common}</p>
+        <p>flag: {country.flag} </p>
+        <button onClick={handlerClickShow}>show</button>
+      </li>
+    )
+  } else {
+    return (
+      <li>
+        <p>{country.name.common}</p>
+        <button onClick={handlerClickShow}>show</button>
+      </li>
+    )
+  }
+  
 }
 
 const CountryDetail = ({ country }) => {
