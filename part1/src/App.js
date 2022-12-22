@@ -1,17 +1,25 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import Note from './components/Note'
-import noteService from './services/notes'
+
+const OnePerson = ({person}) => {
+  return (
+    <li>
+      <p>{person.name}: {person.number}</p>
+    </li>
+  )
+}
 
 const App = () => {
-  const [notes, setNotes] = useState([])
-  const [newNote, setNewNote] = useState('')
+  const [persons, setPersons] = useState([])
+  const [newPerson, setNewPerson] = useState('')
+  const [newNumber, setNewNumber] = useState('')
   const [showAll, setShowAll] = useState(true)
-
-  useEffect(() => {
-    noteService.getAll()
-      .then(initialNotes => {
-        setNotes(initialNotes)
+  const hooks = () => {
+    console.log('effect')
+    axios.get('http://localhost:3001/persons')
+      .then((response) => {
+        console.log('promise fulfilled')
+        setPersons(response.data)
       })
   }, [])
 
@@ -30,41 +38,38 @@ const App = () => {
       setNewNote('')
     })
   }
+  useEffect(hooks, [])
+  console.log('render', persons.length, 'persons')
 
-  const toggleImportanceOf = (id) => {
-    const note = notes.find(n => n.id === id)
-    const changedNote = {...note, important:!note.important}
-    noteService.update(id, changedNote)
-      .then((returnNote) => {
-        setNotes(notes.map(note => note.id !== id ? note: returnNote))
-      })
-      .catch(error => {
-        alert(`the note ${note.content} was already deleted from server`)
-        setNotes(notes.filter(n => n.id != id))
-      })
-    console.log(`importance of + ${ id } + needs to be toggled`)
+  const handleAddPerson = event => {
+    setNewPerson(event.target.value)
   }
 
-  const handleNoteChange = (event) => {
-    setNewNote(event.target.value)
+  const handleNewNumber = event => {
+    setNewNumber(event.target.value)
   }
 
-  const notesToShow = showAll
-    ? notes
-    : notes.filter(note => note.important)
+  const handlerSubmitNewPerson = () => {
+    const url = 'http://localhost:3001/persons'
+    let newPersonObj = {
+      name: newPerson,
+      number: newNumber
+    }
+    axios.post(url, newPersonObj)
+      .then(response => {
+        setPersons(persons.concat(response.data))
+      })
+  }
 
   return (
     <div>
-      <h1>Notes</h1>
-      <div>
-        <button onClick={() => setShowAll(!showAll)}>
-          show {showAll ? 'important' : 'all' }
-        </button>
-      </div>   
+      <form>
+        <input value={newPerson} onChange={handleAddPerson} placeholder='input new person name'></input><br></br>
+        <input value={newNumber} onChange={handleNewNumber} placeholder='input new call number'></input><br></br>
+        <button onClick={handlerSubmitNewPerson}>submit</button>
+      </form>
       <ul>
-        {notesToShow.map(note => 
-          <Note key={note.id} note={note} toggleImportance={() => toggleImportanceOf(note.id)} />
-        )}
+        {persons.map(person => <OnePerson key={person.id} person={person} />)}
       </ul>
       <form onSubmit={addNote}>
         <input
