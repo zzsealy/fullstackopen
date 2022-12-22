@@ -1,99 +1,80 @@
-import { useState, useEffect} from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
-
-const OneNote = ({ country }) => {
-  const [clickShow, setClickShow] = useState(false)
-
-  const handlerClickShow = () => {
-    setClickShow(!clickShow)
-  }
-
-  if (clickShow) {
-    return (
-      <li>
-        <p>{country.name.common}</p>
-        <p>flag: {country.flag} </p>
-        <button onClick={handlerClickShow}>show</button>
-      </li>
-    )
-  } else {
-    return (
-      <li>
-        <p>{country.name.common}</p>
-        <button onClick={handlerClickShow}>show</button>
-      </li>
-    )
-  }
-  
-}
-
-const CountryDetail = ({ country }) => {
-  return (
-    <div>
-      <h2>name: {country.name.common}</h2>
-      <p>area: {country.area}</p>
-      <p>language: {Object.keys(country.languages).map((key, index) => {
-        return (
-          <small>      { key }: {country.languages[key]} </small>
-        )
-      })}</p>
-      <p>flag: {country.flag}</p>
-    </div>
-  )
-}
+import Note from './components/Note'
+import noteService from './services/notes'
 
 const App = () => {
-  const [countries, setCountries] = useState([])
-  const [initCountries, setInitCountries] = useState([])
-  let promptWord = 'Please input more detail'
-  const hooks = () => {
-    axios.get('https://restcountries.com/v3.1/all')
-      .then((response) => {
-        setCountries(response.data)
-        setInitCountries(response.data)
+  const [notes, setNotes] = useState([])
+  const [newNote, setNewNote] = useState('')
+  const [showAll, setShowAll] = useState(true)
+
+  useEffect(() => {
+    noteService.getAll()
+      .then(initialNotes => {
+        setNotes(initialNotes)
       })
-  }
+  }, [])
 
-  useEffect(hooks, [])
-
-  const handleFilterCountry = (event) => {
-    let inputCountry = event.target.value;
-    let filteredCountry = []
-    initCountries.map(country => {
-      if (country.name.common.includes(inputCountry) === true) {
-        filteredCountry.push(country)
-      }
-    })
-    if (filteredCountry.length > 1) {
-      promptWord = 'Please input more detail'
-    } else {
-      promptWord = ''
+  const addNote = (event) => {
+    event.preventDefault()
+    const noteObject = {
+      content: newNote,
+      date: new Date().toISOString(),
+      important: Math.random() > 0.5,
+      id: notes.length + 1,
     }
-    setCountries(filteredCountry)
+
+    noteService.create(noteObject)
+    .then(newNote => {
+      setNotes(notes.concat(newNote))
+      setNewNote('')
+    })
   }
 
-  if (countries.length === 1) {
-    return (
-      <div>
-        <form>
-          <input onChange={handleFilterCountry} placeholder='input filter country'></input>
-        </form>
-        <CountryDetail country={countries[0]} />
-      </div>
-    )
-  } else {
-    return (
-      <div>
-        <form>
-          <small>{promptWord}:   </small>
-          <input onChange={handleFilterCountry} placeholder='input filter country'></input>
-        </form>
-        <ul>
-          {countries.map(country => <OneNote key={country.name.common} country={country} />)}
-        </ul>
-      </div>
-    )
+  const toggleImportanceOf = (id) => {
+    const note = notes.find(n => n.id === id)
+    const changedNote = {...note, important:!note.important}
+    noteService.update(id, changedNote)
+      .then((returnNote) => {
+        setNotes(notes.map(note => note.id !== id ? note: returnNote))
+      })
+      .catch(error => {
+        alert(`the note ${note.content} was already deleted from server`)
+        setNotes(notes.filter(n => n.id != id))
+      })
+    console.log(`importance of + ${ id } + needs to be toggled`)
   }
+
+  const handleNoteChange = (event) => {
+    setNewNote(event.target.value)
+  }
+
+  const notesToShow = showAll
+    ? notes
+    : notes.filter(note => note.important)
+
+  return (
+    <div>
+      <h1>Notes</h1>
+      <div>
+        <button onClick={() => setShowAll(!showAll)}>
+          show {showAll ? 'important' : 'all' }
+        </button>
+      </div>   
+      <ul>
+        {notesToShow.map(note => 
+          <Note key={note.id} note={note} toggleImportance={() => toggleImportanceOf(note.id)} />
+        )}
+      </ul>
+      <form onSubmit={addNote}>
+        <input
+          value={newNote}
+          onChange={handleNoteChange}
+        />
+        <button type="submit">save</button>
+      </form>
+    </div>
+  )
 }
 
 export default App
