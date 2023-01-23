@@ -3,9 +3,23 @@ import axios from 'axios'
 
 const OnePerson = ({person}) => {
   return (
-    <li>
+    <li className='note'>
       <p>{person.name}: {person.number}</p>
     </li>
+  )
+}
+
+const Footer = () => {
+  const footerStyle = {
+    color: 'green',
+    fontStyle: 'italic',
+    fontSize: 16
+  }
+  return (
+    <div style={footerStyle}>
+      <br />
+      <em>Note app, Department of Computer Science, University of Helsinki 2022</em>
+    </div>
   )
 }
 
@@ -55,6 +69,7 @@ const App = () => {
       <ul>
         {persons.map(person => <OnePerson key={person.id} person={person} />)}
       </ul>
+      <Footer/>
     </div>
   )
 }
