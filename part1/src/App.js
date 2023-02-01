@@ -1,75 +1,90 @@
-import { useState, useEffect} from 'react'
-import axios from 'axios'
-
-const OnePerson = ({person}) => {
-  return (
-    <li className='note'>
-      <p>{person.name}: {person.number}</p>
-    </li>
-  )
-}
-
-const Footer = () => {
-  const footerStyle = {
-    color: 'green',
-    fontStyle: 'italic',
-    fontSize: 16
-  }
-  return (
-    <div style={footerStyle}>
-      <br />
-      <em>Note app, Department of Computer Science, University of Helsinki 2022</em>
-    </div>
-  )
-}
+import { useState, useEffect } from 'react'
+import Note from './components/Note'
+import Notification from './components/Notification'
+import Footer from './components/Footer'
+import noteService from './services/notes'
 
 const App = () => {
-  const [persons, setPersons] = useState([])
-  const [newPerson, setNewPerson] = useState('')
-  const [newNumber, setNewNumber] = useState('')
+  const [notes, setNotes] = useState([])
+  const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
-  const hooks = () => {
-    console.log('effect')
-    axios.get('http://localhost:3001/persons')
-      .then((response) => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
+  const [errorMessage, setErrorMessage] = useState(null)
+
+  useEffect(() => {
+    noteService
+      .getAll()
+      .then(initialNotes => {
+        setNotes(initialNotes.data)
       })
-  }
-  useEffect(hooks, [])
-  console.log('render', persons.length, 'persons')
+  }, [])
 
-  const handleAddPerson = event => {
-    setNewPerson(event.target.value)
-  }
-
-  const handleNewNumber = event => {
-    setNewNumber(event.target.value)
-  }
-
-  const handlerSubmitNewPerson = () => {
-    const url = 'http://localhost:3001/persons'
-    let newPersonObj = {
-      name: newPerson,
-      number: newNumber
+  const addNote = (event) => {
+    event.preventDefault()
+    const noteObject = {
+      content: newNote,
+      important: Math.random() > 0.5,
     }
-    axios.post(url, newPersonObj)
-      .then(response => {
-        setPersons(persons.concat(response.data))
+
+    noteService
+      .create(noteObject)
+        .then(returnedNote => {
+        setNotes(notes.concat(returnedNote))
+        setNewNote('')
       })
   }
+
+  const handleNoteChange = (event) => {
+    setNewNote(event.target.value)
+  }
+
+  const notesToShow = showAll
+    ? notes
+    : notes.filter(note => note.important)
+
+   const toggleImportanceOf = id => {
+      const note = notes.find(n => n.id === id)
+      const changedNote = { ...note, important: !note.important }
+  
+      noteService
+        .update(id, changedNote).then(returnedNote => {
+          setNotes(notes.map(note => note.id !== id ? note : returnedNote))
+        })
+        .catch(error => {
+          setErrorMessage(
+            `Note '${note.content}' was already removed from server`
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+          setNotes(notes.filter(n => n.id !== id))
+        })
+    }
 
   return (
     <div>
-      <form>
-        <input value={newPerson} onChange={handleAddPerson} placeholder='input new person name'></input><br></br>
-        <input value={newNumber} onChange={handleNewNumber} placeholder='input new call number'></input><br></br>
-        <button onClick={handlerSubmitNewPerson}>submit</button>
-      </form>
+      <h1>Notes app</h1>
+      <Notification message={errorMessage} />
+      <div>
+        <button onClick={() => setShowAll(!showAll)}>
+          show {showAll ? 'important' : 'all' }
+        </button>
+      </div> 
       <ul>
-        {persons.map(person => <OnePerson key={person.id} person={person} />)}
+        <ul>
+          {notesToShow.map(note => 
+            <Note
+              key={note.id}
+              note={note}
+              toggleImportance={() => toggleImportanceOf(note.id)}
+            />
+          )}
+        </ul>
       </ul>
-      <Footer/>
+      <form onSubmit={addNote}>
+        <input value={newNote} onChange={handleNoteChange} />
+        <button type="submit">save</button>
+      </form>
+      <Footer />
     </div>
   )
 }

@@ -1,7 +1,9 @@
 const express = require('express')
+const cors = require('cors')
 
 const app = express()
 app.use(express.json())
+app.use(cors())
 
 let notes = [
     {
@@ -63,7 +65,7 @@ app.post('/api/notes', (request, response) => {
   const body = request.body
   
   if(!body.content) {
-    return response.status(400).json({
+    return response.status(400).json({ // 这个return很重要 否则代码会执行到最后
       error: 'content error'
     })
   }
