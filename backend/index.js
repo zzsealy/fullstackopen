@@ -1,6 +1,7 @@
 const express = require('express')
 
 const app = express()
+app.use(express.json())
 
 let notes = [
     {
@@ -40,7 +41,7 @@ app.get('/api/notes/:id', (request, response) => {
   if (note) {
     response.json(note)
   } else {
-    response.status(404).end()
+    response.status(404).end()  // 使用end来响应请求, 而不发送任何数据
   }
 })
 
@@ -48,7 +49,14 @@ app.get('/api/notes/:id', (request, response) => {
 app.delete('/api/notes/:id', (request, response) => {
   const id = Number(request.params.id)
   notes = notes.find(note => note.id !== id)
-  response.status(204)
+  response.status(204).end() // 如果删除成功了就返回204，不返回任何数据， 这里不管是否成功 都返回204
+})
+
+
+app.post('/api/notes', (request, response) => {
+  const note = request.body
+  console.log(note)
+  response.json(note)
 })
 
 
