@@ -5,6 +5,22 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
+const mongoose = require('mongoose')
+
+// DO NOT SAVE YOUR PASSWORD TO GITHUB!!
+const url = `mongodb://todo_admin:drq12345!@localhost:27017/todo`
+
+mongoose.connect(url)
+
+const noteSchema = new mongoose.Schema({
+  content: String,
+  date: Date,
+  important: Boolean,
+})
+
+const Note = mongoose.model('Note', noteSchema)
+
+
 let notes = [
     {
       id: 1,
@@ -33,7 +49,21 @@ app.get('/', (request, response) => {
 
 
 app.get('/api/notes', (request, response) => {
-  response.json(notes)
+  Note.find({}).then(
+    notes => {
+    response.json(notes)
+  })
+})
+
+
+// 报错notes 到mongodb
+app.get('/api/save_notes', (request, response) => {
+  notes.map(note => {
+    let noteModel = new Note(note)
+    noteModel.save((error, note) => {
+      console.log(error, note)
+    })
+  })
 })
 
 
