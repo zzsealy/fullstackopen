@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import store from './reducers/noteReducer'
+import {store, noteReducer} from './reducers/noteReducer'
 
 const App = () => {
   return (
