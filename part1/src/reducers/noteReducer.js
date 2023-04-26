@@ -4,8 +4,7 @@ import { createStore } from 'redux'
 const noteReducer = (state = [], action) => {
     // state 最开始是个空数组
     if (action.type == 'NEW_NOTE') {
-        state.push(action.data)
-        return state
+        return state.concat(action.data)
     }
     return state
 }
@@ -32,4 +31,7 @@ store.dispatch({
     }
 })
 
-export default store
+export { 
+    store,
+    noteReducer
+}
