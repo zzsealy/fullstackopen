@@ -2,6 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {store, noteReducer} from './reducers/noteReducer'
 
+import Unicafe from './unicafe'
+
 const App = () => {
   return (
     <div>
@@ -10,6 +12,8 @@ const App = () => {
                   {note.content} <strong>{note.import ? 'important' : ''}</strong>
                 </li>
             )}
+            <Unicafe />
+            
     </div>
   )
 }
