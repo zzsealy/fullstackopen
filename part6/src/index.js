@@ -1,28 +1,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import {store, noteReducer} from './reducers/noteReducer'
 
-import Unicafe from './unicafe'
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
 
-const App = () => {
-  return (
-    <div>
-          {store.getState().map(note => 
-                <li key={note.id}>
-                  {note.content} <strong>{note.import ? 'important' : ''}</strong>
-                </li>
-            )}
-            <Unicafe />
-            
-    </div>
-  )
-}
+import App from './App'
+import noteReducer from './reducers/noteReducer'
 
-const renderApp = () => {
-  ReactDOM.createRoot(document.getElementById('root')).render(<App />)
-}
+const store = createStore(noteReducer)
 
-renderApp()
-store.subscribe(renderApp)
-
-
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+)
