@@ -1,4 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux'
+import { voteNotification } from './components/Notification'
 
 const App = () => {
   const anecdotes = useSelector(state => state)
@@ -6,6 +7,7 @@ const App = () => {
 
   const vote = (id) => {
     console.log('vote', id)
+    dispatch(voteNotification(id))
   }
 
   return (

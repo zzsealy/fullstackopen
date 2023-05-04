@@ -11,4 +11,14 @@ const Notification = () => {
   )
 }
 
+export const voteNotification = (id) => {
+  const action = {
+    type: 'vote',
+    payload: {
+      id: id 
+    }
+  }
+  return action
+}
+
 export default Notification
