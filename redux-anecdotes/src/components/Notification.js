@@ -1,3 +1,5 @@
+import { getId } from '../reducers/anecdoteReducer'
+
 const Notification = () => {
   const style = {
     border: 'solid',
@@ -16,6 +18,19 @@ export const voteNotification = (id) => {
     type: 'vote',
     payload: {
       id: id 
+    }
+  }
+  return action
+}
+
+
+export const addNotificatin = (content) => {
+  const action = {
+    type: 'addNotification',
+    payload: {
+      content: content,
+      id: getId(),
+      votes: 0
     }
   }
   return action

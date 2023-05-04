@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { voteNotification } from './components/Notification'
+import { voteNotification, addNotificatin } from './components/Notification'
 
 const App = () => {
   const anecdotes = useSelector(state => state)
@@ -8,6 +8,13 @@ const App = () => {
   const vote = (id) => {
     console.log('vote', id)
     dispatch(voteNotification(id))
+  }
+
+  const createNotification = (event) => {
+    event.preventDefault();
+    const content = event.target.notification.value;
+    event.target.notification.value = 0;
+    dispatch(addNotificatin(content))
   }
 
   return (
@@ -25,9 +32,9 @@ const App = () => {
         </div>
       )}
       <h2>create new</h2>
-      <form>
-        <div><input /></div>
-        <button>create</button>
+      <form onSubmit={createNotification}>
+        <input name='notification'/>
+        <button type='submit'>create</button>
       </form>
     </div>
   )
