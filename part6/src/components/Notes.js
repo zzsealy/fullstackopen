@@ -6,7 +6,7 @@ const Note = ({ note, handleClick }) => {
     return (
         <li onCLick = {handleClick}>
             { note.content }
-            <strong>{note.important ? 'important' : ''}</strong>
+            <strong>{note.important ? ' important' : ''}</strong>
         </li>
     )
 }
