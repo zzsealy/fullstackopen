@@ -3,16 +3,20 @@ import NewNote from "./components/NewNote"
 
 const App = () => {
 
+  const filterSelected = (value) => {
+    console.log(value)
+  }
+
   return(
     <div>
       < NewNote />
       <div>
         all <input type='radio' name='filter'
-          onChange={() => filterSelect('ALL')} />
+          onChange={() => filterSelected('ALL')} />
         important <input type='radio' name='filter'
-          onChange={() => filterSelect('IMPORTANT')} />
+          onChange={() => filterSelected('IMPORTANT')} />
         nonimportant <input type='radio' name='filter'
-          onChange={() => filterSelect('NONIMPORTANT')} />
+          onChange={() => filterSelected('NONIMPORTANT')} />
       </div>
       < Notes />
     </div>
