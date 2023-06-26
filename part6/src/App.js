@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import NewNote from "./components/NewNote"
+import NewNote from "./components/newNote"
 import Notes from "./components/Notes"
 import VisibilityFilter from "./components/VisibilityFilter"
 import noteService from './services/notes'
