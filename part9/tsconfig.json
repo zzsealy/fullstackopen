@@ -1,0 +1,6 @@
+{
+
+    "compilerOptions": {
+        "noImplicitAny": false // 不要求所有变量都有类型
+    }
+}
