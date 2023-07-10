@@ -1,6 +1,15 @@
 {
-
     "compilerOptions": {
-        "noImplicitAny": false // 不要求所有变量都有类型
+      "noImplicitAny": true,
+      "noImplicitReturns": true,
+      "strictNullChecks": true,
+      "strictPropertyInitialization": true,
+      "strictBindCallApply": true,
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "noImplicitThis": true,
+      "alwaysStrict": true,
+      "esModuleInterop": true,
+      "declaration": true,
     }
-}
+  }    
